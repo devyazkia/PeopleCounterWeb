@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <title>People Counter</title>
+    <link href="{%  static 'css/bootstrap.min.css'%}" rel = "stylesheet">
+    <link href="{%  static 'css/style.css'%}" rel="stylesheet">
+    {# MORRIS.JS for Chart #}
+
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{%  static 'js/bootstrap.js'%}"></script>
+    <nav class="navbar navbar-expand-md navbar-dark bg-info py-2">
+        <a class="navbar-brand" href="#">People Counter</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#mainNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <div class="container" style="margin-top : 20px;">
+    <form action="" method="get">
+        <div class="row col-md-12">
+            <div class="form-group col-md-6">
+                <label><h3>{{ jml_pengunjung.tanggal }}</h3> </label>
+            </div>
+            
+            <div class="form-group row col-md-5">
+                <input data-date-format="yyyy-mm-dd" id="datepicker" class="form-control" name="index">
+            </div>
+            <div class="form-group row col-md-1">
+                <input type="submit" value="search">                                    
+            </div>
+        </div>
+    </form>
+    {% block content %}    
+    {% endblock content %}
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date of Counter</th>
+                        <th>Pukul 09</th>
+                        <th>Pukul 10</th>
+                        <th>Pukul 11</th>
+                        <th>Pukul 12</th>
+                        <th>Pukul 13</th>
+                        <th>Pukul 14</th>
+                        <th>Pukul 15</th>
+                        <th>Pukul 16</th>
+                        <th>Pukul 17</th>
+                        <th>Pukul 18</th>
+                        <th>Pukul 19</th>
+                        <th>Pukul 20</th>
+                        <th>Pukul 21</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jml_pengunjung in datas %}
+                    <tr> 
+                        <td>{{ jml_pengunjung.tanggal }}</td>
+                        <td>{{ jml_pengunjung.pukul_10 }}</td>
+                        <td>{{ jml_pengunjung.pukul_11 }}</td>
+                        <td>{{ jml_pengunjung.pukul_12 }}</td>
+                        <td>{{ jml_pengunjung.pukul_13 }}</td>
+                        <td>{{ jml_pengunjung.pukul_14 }}</td>
+                        <td>{{ jml_pengunjung.pukul_15 }}</td>
+                        <td>{{ jml_pengunjung.pukul_16 }}</td>
+                        <td>{{ jml_pengunjung.pukul_17 }}</td>
+                        <td>{{ jml_pengunjung.pukul_18 }}</td>
+                        <td>{{ jml_pengunjung.pukul_19 }}</td>
+                        <td>{{ jml_pengunjung.pukul_20 }}</td>
+                        <td>{{ jml_pengunjung.pukul_21 }}</td>
+                        <td>
+                            <button type="button" class="btn btn-info" href><a href="statistiques.pdf">Generate</a></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not datas %}
+                    <tr>
+                      <td colspan="6" class="cs-text-center cs-empty-table"> There is no data yet. Please add a data ! </td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+            </table>
+    </div>
+    {% include 'base/js.html' %}
+    
+    <script>
+        $(document).ready(function (){
+            {% block jquery %} {% endblock %}
+        })
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <style type="text/css">
+            .datepicker {
+                font-size: 0.875em;
+            }            
+            .datepicker td, .datepicker th {
+                width: 2em;
+                height: 2em;
+            }
+            
+    </style>
+    <script type="text/javascript">
+        $('#datepicker').datepicker({
+            weekStart: 1,
+            daysOfWeekHighlighted: "6,0",
+            autoclose: true,
+            todayHighlight: true,
+        });
+        $('#datepicker').datepicker("setDate", new Date());
+    </script>
+</body>
