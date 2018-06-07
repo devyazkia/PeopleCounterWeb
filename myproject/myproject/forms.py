@@ -5,4 +5,4 @@ class DataForm(ModelForm):
     
     class Meta:
         model = jml_pelanggan
-        fields = ['tanggal', 'pukul_10', 'pukul_11', 'pukul_12', 'pukul_13', 'pukul_14', 'pukul_15', 'pukul_16', 'pukul_17', 'pukul_18', 'pukul_19', 'pukul_20', 'pukul_21']
+        fields = ['tanggal', 'pukul09', 'pukul10', 'pukul11', 'pukul12', 'pukul13', 'pukul14', 'pukul15', 'pukul16', 'pukul17', 'pukul18', 'pukul19', 'pukul20']

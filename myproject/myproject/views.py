@@ -5,12 +5,15 @@ from django.views.generic import View, ListView
 from .forms import DataForm
 from .model import jml_pelanggan
 import json
+import datetime
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 User = get_user_model()
-get = '2018-04-02'
+now = datetime.datetime.now()
+get = now.strftime("%Y-%m-%d")
+# get = '2018-04-02'
 
 def index(request):
     status = ''
@@ -22,6 +25,11 @@ def index(request):
     else:
         form = DataForm()
         return render(request, 'chart.html', {'form': form, 'datas': jml_pelanggan.objects.filter(tanggal=  get), 'status': status })  
+
+def history(request):
+    status = ''
+    form = DataForm()
+    return render(request, 'charthistory.html', {'form': form, 'datas': jml_pelanggan.objects.filter(tanggal=  get), 'status': status })  
 
 class GenreListView(ListView):
     model = jml_pelanggan
@@ -44,25 +52,24 @@ class ChartData(APIView):
         data = []
         rowarray_list = []
         for row in rows:
-            t10 = json.dumps((row.pukul_10))
-            t11 = json.dumps((row.pukul_11))
-            t12 = json.dumps((row.pukul_12))
-            t13 = json.dumps((row.pukul_13))
-            t14 = json.dumps((row.pukul_14))
-            t15 = json.dumps((row.pukul_15))
-            t16 = json.dumps((row.pukul_16))
-            t17 = json.dumps((row.pukul_17))
-            t18 = json.dumps((row.pukul_18))
-            t19 = json.dumps((row.pukul_19))
-            t20 = json.dumps((row.pukul_20))
-            t21 = json.dumps((row.pukul_21))
+            t9 = json.dumps((row.pukul09))            
+            t10 = json.dumps((row.pukul10))
+            t11 = json.dumps((row.pukul11))
+            t12 = json.dumps((row.pukul12))
+            t13 = json.dumps((row.pukul13))
+            t14 = json.dumps((row.pukul14))
+            t15 = json.dumps((row.pukul15))
+            t16 = json.dumps((row.pukul16))
+            t17 = json.dumps((row.pukul17))
+            t18 = json.dumps((row.pukul18))
+            t19 = json.dumps((row.pukul19))
+            t20 = json.dumps((row.pukul20))
             # j = json.dumps(t9)
             # jj = json.dumps(tt)
             # data.append(j)
-        default_item = [t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21      ]
+        default_item = [ t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20]
         datajson = {
             "labels" : labels,
             "default" : default_item,
         }
-        
         return Response(datajson)

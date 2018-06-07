@@ -9,6 +9,7 @@ from .views import ChartData
 urlpatterns = [
     path('api/chart/data/', ChartData.as_view()),
     path('', views.index, name='index'),
+    path('history/', views.history, name='history'),    
     # path(r'^generate_pdf/$', "analytics.views.GroupPDFGenerate.as_view()", name="generate_pdf"),
     path('admin/', admin.site.urls),
     path(r'^posts/(?P<slug>[-\w]+)/$', views.index, name='index'),
