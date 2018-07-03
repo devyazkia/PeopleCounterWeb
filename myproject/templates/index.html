@@ -6,6 +6,39 @@
     <link href="{%  static 'css/bootstrap.min.css'%}" rel = "stylesheet">
     <link href="{%  static 'css/style.css'%}" rel="stylesheet">
     {# MORRIS.JS for Chart #}
+    <style type="text/css">
+        body {
+            font-weight: 200;
+            font-size: 14px;
+        }
+        .header {
+            font-size: 20px;
+            font-weight: 100;
+            text-align: center;
+            color: #007cae;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 100;
+           /* text-align: right;*/
+           padding: 10px 20px 0px 20px;  
+        }
+        .title span {
+            color: #007cae;
+        }
+        .details {
+            padding: 10px 20px 0px 20px;
+            text-align: left !important;
+            /*margin-left: 40%;*/
+        }
+        .hrItem {
+            border: none;
+            height: 1px;
+            /* Set the hr color */
+            color: #333; /* old IE */
+            background-color: #fff; /* Modern Browsers */
+        }
+    </style>
 
 </head>
 <body>
@@ -17,23 +50,31 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar navbar-brand" href="#">Home</a>
-        <a class="navbar navbar-brand" href="">History</a>
+        <a class="navbar navbar-brand" href="history/">History</a>
     </nav>
     <div class="container" style="margin-top : 20px;">
-    <form action="" method="get">
-        <div class="row col-md-12">
-            <div class="form-group col-md-6">
-                <label><h3 id="date"></h3> </label>
+        <form action="" method="get">
+            <div class="row col-md-12">
+                <div class="form-group col-md-6">
+                    <label><h3 id="date"></h3> </label>
+                </div>
+            </div>
+        </form>
+    {% block content %}
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="row">
+                <canvas id="myChart" width="30" height="9"></canvas>
             </div>
         </div>
-    </form>
-    {% block content %}    
+    </div>
     {% endblock content %}
+    <div class="container">
         <table class="table">
                 <thead>
                     <tr>
                         <th>Date of Counter</th>
-                        <th>Pukul 09</th>
+                        <!-- <th>Pukul 09</th> -->
                         <th>Pukul 10</th>
                         <th>Pukul 11</th>
                         <th>Pukul 12</th>
@@ -49,21 +90,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for jml_pengunjung in datas %}
+                    {% for rekap_pengunjung in datas %}
                     <tr> 
-                        <td>{{ jml_pengunjung.tanggal }}</td>
-                        <td>{{ jml_pengunjung.pukul09 }}</td>                        
-                        <td>{{ jml_pengunjung.pukul10 }}</td>
-                        <td>{{ jml_pengunjung.pukul11 }}</td>
-                        <td>{{ jml_pengunjung.pukul12 }}</td>
-                        <td>{{ jml_pengunjung.pukul13 }}</td>
-                        <td>{{ jml_pengunjung.pukul14 }}</td>
-                        <td>{{ jml_pengunjung.pukul15 }}</td>
-                        <td>{{ jml_pengunjung.pukul16 }}</td>
-                        <td>{{ jml_pengunjung.pukul17 }}</td>
-                        <td>{{ jml_pengunjung.pukul18 }}</td>
-                        <td>{{ jml_pengunjung.pukul19 }}</td>
-                        <td>{{ jml_pengunjung.pukul20 }}</td>
+                        <td>{{ rekap_pengunjung.tanggal }}</td>
+                        <!-- <td>{{ rekap_pengunjung.pukul09 }}</td>   -->
+                        <td>{{ rekap_pengunjung.pukul10 }}</td>
+                        <td>{{ rekap_pengunjung.pukul11 }}</td>
+                        <td>{{ rekap_pengunjung.pukul12 }}</td>
+                        <td>{{ rekap_pengunjung.pukul13 }}</td>
+                        <td>{{ rekap_pengunjung.pukul14 }}</td>
+                        <td>{{ rekap_pengunjung.pukul15 }}</td>
+                        <td>{{ rekap_pengunjung.pukul16 }}</td>
+                        <td>{{ rekap_pengunjung.pukul17 }}</td>
+                        <td>{{ rekap_pengunjung.pukul18 }}</td>
+                        <td>{{ rekap_pengunjung.pukul19 }}</td>
+                        <td>{{ rekap_pengunjung.pukul20 }}</td>
+                        <td>{{ rekap_pengunjung.pukul21 }}</td>
                         <td>
                             <button type="button" class="btn btn-info" href>Generate</button>
                         </td>
@@ -76,39 +118,71 @@
                   {% endif %}
                 </tbody>
             </table>
+        </div>
     </div>
     {% include 'base/js.html' %}
     
-    <script>
-        $(document).ready(function (){
-            {% block jquery %} {% endblock %}
-        })
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <style type="text/css">
-            .datepicker {
-                font-size: 0.875em;
-            }            
-            .datepicker td, .datepicker th {
-                width: 2em;
-                height: 2em;
+   <script>
+    var endpoint = '/api/chart/data/'
+    var defaulfData = []
+    // var labels = ["09.00", "10.00", "11.00", "12.00", "13.00", "14.00", "15.00", "16.00", "17.00", "18.00", "19.00", "20.00", "21.00"]
+    var labels = []
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data){
+                labels = data.labels
+                defaulfData = data.default
+                setCharts()
+
+            },
+            error: function(error_data){
+                console.log("error")
+                console.log(error_data)
             }
-            
-    </style>
-    <script type="text/javascript">
-        $('#datepicker').datepicker({
-            weekStart: 1,
-            daysOfWeekHighlighted: "6,0",
-            autoclose: true,
-            todayHighlight: true,
-        });
-        $('#datepicker').datepicker("setDate", new Date());
-        n =  new Date();
-        y = n.getFullYear();
-        m = n.getMonth() + 1;
-        d = n.getDate();
-        document.getElementById("date").innerHTML = m + "/" + d + "/" + y;
-    </script>
+        })
+        function setCharts() {
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jumlah Pengunjung',
+                        data: defaulfData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            })
+        }
+</script>
 </body>

@@ -1,10 +1,8 @@
 from django.db import models
 # from django.utils import timezone
 
-class jml_pelanggan(models.Model):
-    # id = models.BigIntegerField()
+class rekap_pengunjung(models.Model):
     tanggal = models.CharField(primary_key=True)
-    pukul09 = models.CharField(max_length=250)    
     pukul10 = models.CharField(max_length=250)
     pukul11 = models.CharField(max_length=250)
     pukul12 = models.CharField(max_length=250)
@@ -16,9 +14,10 @@ class jml_pelanggan(models.Model):
     pukul18 = models.CharField(max_length=250)
     pukul19 = models.CharField(max_length=250)
     pukul20 = models.CharField(max_length=250)
+    pukul21 = models.CharField(max_length=250)
     
     class Meta:
-        db_table="jml_pelanggan"
+        db_table="rekap_pengunjung"
     
     def __unicode__(self):
         return self.tanggal
