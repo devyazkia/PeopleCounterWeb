@@ -16,33 +16,44 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar navbar-brand" href="/">Home</a>
-        <a class="navbar navbar-brand" href="#">History</a>
-        <a class="navbar navbar-brand" href="/export">Export</a>
+        <a class="navbar navbar-brand" href="history/">History</a>
+        <a class="navbar navbar-brand" href="#">Export</a>
     </nav>
     <div class="container" style="margin-top : 20px;">
+        <!-- <div class="col-md-5 offset-md-2"><h4>Select Date</h4></div> -->
+        <div class="row col-md-12">
+            <div class="row col-md-3 offset-md-2">
+                <h6>From</h6>
+            </div>
+            <div class="row col-md-5">
+                <h6>To</h6>
+            </div>
+        </div>
     <form action="" method="get">
         <div class="row col-md-12">
-            <div class="row col-md-5 offset-md-9">
-                <label><h3 id="date"></h3> </label>
-                    <div class="form-group row col-md-6">
-                        <input data-date-format="yyyy-mm-dd" id="datepicker" class="form-control" name="date">
-                    </div>
-                    <div class="form-group col-sm-2">
-                        <input class="btn btn-default" type="submit" value="search">                                
-                    </div>
+            <div class="row col-md-3 offset-md-2">
+                <div class="form-group row col-md-12">
+                    <input data-date-format="yyyy-mm-dd" id="datepickerFrom" class="form-control" name="dateFrom">
+                </div>
             </div>
+            <div class="row col-md-3">
+                <div class="form-group row col-md-12">
+                    <input data-date-format="yyyy-mm-dd" id="datepickerTo" class="form-control" name="dateTo">
+                </div>
+            </div>
+            <div class="form-group col-sm-3">
+                    <input class="btn btn-default" type="submit" value="search">                                  
+            </div>
+            
         </div>
     </form>
-    {% block content %}
-    <div class="container">
-        <div class="col-sm-12">
-            <div class="row">
-                <canvas id="myChart" width="30" height="9"></canvas>
-            </div>
+    <div class="row col-md-12">
+        <div class="row col-md-2 offset-md-11 ">
+                <a href="{% url 'export_range' %}">
+                <button type="button" class="btn btn-info" >Generate</button></a>
         </div>
     </div>
-    {% endblock content %}
-    <div class="container">
+    <div class="container" style="margin-top : 20px;">
         <table class="table">
                 <thead>
                     <tr>
@@ -77,14 +88,6 @@
                         <td>{{ rekap_pengunjung.pukul19 }}</td>
                         <td>{{ rekap_pengunjung.pukul20 }}</td>
                         <td>{{ rekap_pengunjung.pukul21 }}</td>
-                        <td>
-                            <div action="" method="get">
-                                <input data-date-format="yyyy-mm-dd" value="{{ rekap_pengunjung.tanggal }}">
-                                <a href="{% url 'export_history' %}">
-                                <button type="button" class="btn btn-info" >Generate</button></a>
-                            </div>
-                           
-                        </td>
                     </tr>
                     {% endfor %}
                     {% if not datas %}
@@ -113,79 +116,36 @@
     </style>
     <script type="text/javascript">
     var DATA = window.location.pathname.replace("/", ""); 
-        $('#datepicker').datepicker({
+        $('#datepickerFrom').datepicker({
             weekStart: 1,
             daysOfWeekHighlighted: "6,0",
             autoclose: true,
             todayHighlight: true,
         });
-        $('#datepicker').datepicker("setDate", new Date());
+        $('#datepickerFrom').datepicker("setDate", new Date());
         n =  new Date();
         y = n.getFullYear();
         m = n.getMonth() + 1;
         d = n.getDate();
-        var history = document.getElementById("date");
+        var history = document.getElementById("dateFrom");
         var date = m + "/" + d + "/" + y;
         history.src = "http://127.0.0.1:8000/history/" + DATA;
-    </script>
-    <script>
-        var endpoint = '/api/chart/datahistory/'
-        var defaulfData = []
-        // var labels = ["09.00", "10.00", "11.00", "12.00", "13.00", "14.00", "15.00", "16.00", "17.00", "18.00", "19.00", "20.00", "21.00"]
-        var labels = []
-            $.ajax({
-                method: "GET",
-                url: endpoint,
-                success: function(data){
-                    labels = data.labels
-                    defaulfData = data.default
-                    setCharts()
     
-                },
-                error: function(error_data){
-                    console.log("error")
-                    console.log(error_data)
-                }
-            })
-            function setCharts() {
-                var ctx = document.getElementById("myChart");
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Jumlah Pengunjung',
-                            data: defaulfData,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
-                })
-            }
+    var DATA = window.location.pathname.replace("/", ""); 
+        $('#datepickerTo').datepicker({
+            weekStart: 1,
+            daysOfWeekHighlighted: "6,0",
+            autoclose: true,
+            todayHighlight: true,
+        });
+        $('#datepickerTo').datepicker("setDate", new Date());
+        n =  new Date();
+        y = n.getFullYear();
+        m = n.getMonth() + 1;
+        d = n.getDate();
+        var history = document.getElementById("dateTo");
+        var date = m + "/" + d + "/" + y;
+        history.src = "http://127.0.0.1:8000/history/" + DATA;
     </script>
 
 </body>

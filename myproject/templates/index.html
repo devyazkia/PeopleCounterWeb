@@ -51,6 +51,7 @@
         </button>
         <a class="navbar navbar-brand" href="#">Home</a>
         <a class="navbar navbar-brand" href="history/">History</a>
+        <a class="navbar navbar-brand" href="export/">Export</a>
     </nav>
     <div class="container" style="margin-top : 20px;">
         <form action="" method="get">
@@ -107,7 +108,8 @@
                         <td>{{ rekap_pengunjung.pukul20 }}</td>
                         <td>{{ rekap_pengunjung.pukul21 }}</td>
                         <td>
-                            <button type="button" class="btn btn-info" href>Generate</button>
+                            <a href="{% url 'export_users_csv' %}">
+                                <button type="button" class="btn btn-info" >Generate</button></a>
                         </td>
                     </tr>
                     {% endfor %}
